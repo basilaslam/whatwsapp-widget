@@ -1,4 +1,3 @@
-// whatsapp-widget.js
 (function(global) {
     function initializeWhatsAppWidget({ phoneNumber, message = '', position = 'bottom-right' }) {
       const whatsappIcon = document.createElement('a');
@@ -16,12 +15,17 @@
       whatsappIcon.style.textDecoration = 'none';
       whatsappIcon.style.zIndex = '1000';
   
+      // Check if device is mobile using screen width
+      const isMobile = window.innerWidth <= 768;
+      const mobileBottomOffset = '100px';
+      const desktopOffset = '20px';
+  
       if (position === 'bottom-right') {
-        whatsappIcon.style.bottom = '20px';
         whatsappIcon.style.right = '20px';
+        whatsappIcon.style.bottom = isMobile ? mobileBottomOffset : desktopOffset;
       } else if (position === 'bottom-left') {
-        whatsappIcon.style.bottom = '20px';
         whatsappIcon.style.left = '20px';
+        whatsappIcon.style.bottom = isMobile ? mobileBottomOffset : desktopOffset;
       } else if (position === 'top-right') {
         whatsappIcon.style.top = '20px';
         whatsappIcon.style.right = '20px';
@@ -35,12 +39,18 @@
       iconImage.alt = 'WhatsApp';
       iconImage.style.width = '60%';
       iconImage.style.height = '60%';
-  
+      
       whatsappIcon.appendChild(iconImage);
-  
       document.body.appendChild(whatsappIcon);
+  
+      // Update position on resize
+      window.addEventListener('resize', () => {
+        const isNowMobile = window.innerWidth <= 768;
+        if (position === 'bottom-right' || position === 'bottom-left') {
+          whatsappIcon.style.bottom = isNowMobile ? mobileBottomOffset : desktopOffset;
+        }
+      });
     }
   
     global.initializeWhatsAppWidget = initializeWhatsAppWidget;
   })(window);
-  
